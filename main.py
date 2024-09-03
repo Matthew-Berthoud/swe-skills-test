@@ -33,8 +33,13 @@ for f in filenames:
         for child in element:
             is_leaf = False
             break
-        if is_leaf:
-            bounds = element.attrib.get("bounds")
-            bounds = bounds.replace('][', '],[')
-            bounds = eval(bounds)
-            print(bounds)
+        if not is_leaf:
+            continue
+
+        bounds = element.attrib.get("bounds", "[0,0][0,0]")
+        bounds = bounds.replace('][', '],[')
+        bounds = eval(bounds)
+        box_coords.append(bounds)
+    
+    pprint.pp(box_coords)
+
