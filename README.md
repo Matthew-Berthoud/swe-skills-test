@@ -1,7 +1,7 @@
 # Software Engineering Skills Test and Survey
 CSCI 535 Software Engineering: Homework 1
 
-## How to run
+## How to compile and run
 * [Install Python and pip](https://www.python.org/downloads/)
 * Clone the repo
 * Do the following:
@@ -14,8 +14,10 @@ python3 -m pip install --upgrade Pillow
 python3 main.py Programming-Assignment-Data
 ```
 
+## Explanation
+
+
 ## Libraries
 * `os`: listing directory contents
 * `sys`: taking command-line arguments
-* `pprint`: more human-readable debug printing of json-ish objects
 * `xml.etree.ElementTree`: parsing xml into python objects

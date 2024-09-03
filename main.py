@@ -1,16 +1,7 @@
 import os
 import sys
-import pprint
 import xml.etree.ElementTree as ET
-
-def do_parse(data_dir, f):
-    print("Parsing " + f)
-    try:
-        if data_dir[-1] != "/":
-            data_dir = data_dir + "/"
-        return ET.parse(data_dir + f) 
-    except:
-        print("Error while parsing, aborting")
+from PIL import Image, ImageDraw
 
 argc = len(sys.argv)
 if argc != 2:
@@ -21,14 +12,19 @@ data_dir = sys.argv[1]
 filenames = [f[:-4] for f in os.listdir(data_dir) if f.endswith(".xml")]
 
 for f in filenames:
-    box_coords = []
+    print("Parsing " + f)
+    if data_dir[-1] != "/":
+        data_dir = data_dir + "/"
+    try:
+        tree = ET.parse(data_dir + f + ".xml") 
+    except:
+        print(f"Failed to parse {f}, aborting")
+        continue
 
-    tree = do_parse(data_dir, f + ".xml")
+    box_coords = []
     root = tree.getroot()
     elements = root.iter()
     for element in elements:
-        # print("\n" + str(element.tag))
-        # pprint.pp(element.attrib)
         is_leaf = True
         for child in element:
             is_leaf = False
@@ -37,9 +33,12 @@ for f in filenames:
             continue
 
         bounds = element.attrib.get("bounds", "[0,0][0,0]")
-        bounds = bounds.replace('][', '],[')
+        bounds = bounds.replace('][', ',')
         bounds = eval(bounds)
         box_coords.append(bounds)
     
-    pprint.pp(box_coords)
-
+    with Image.open(data_dir + f + ".png") as im:
+        draw = ImageDraw.Draw(im)
+        for coords in box_coords:
+            draw.rectangle(xy=coords, outline="yellow", width=8)
+        im.save("output/" + f + ".png", "PNG")
